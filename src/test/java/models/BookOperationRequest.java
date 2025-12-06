@@ -22,7 +22,7 @@ public class BookOperationRequest {
     }
 
     public String toDeleteJson() {
-        return String.format("{"userId":"%s","isbn":"%s"}", userId, isbn);
+        return String.format("{\"userId\":\"%s\",\"isbn\":\"%s\"}", userId, isbn);
     }
 
     @Data
