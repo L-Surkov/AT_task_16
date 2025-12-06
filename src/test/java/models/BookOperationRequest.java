@@ -15,16 +15,14 @@ public class BookOperationRequest {
     @JsonIgnore
     private String isbn;
 
-
     public BookOperationRequest(String userId, String isbn) {
         this.userId = userId;
         this.collectionOfIsbns = new Isbn[]{new Isbn(isbn)};
-        this.isbn = isbn;  // Сохраняем для последующего использования в DELETE
+        this.isbn = isbn;
     }
 
     public String toDeleteJson() {
-        return String.format(
-                ("{\"userId\":\"%s\",\"isbn\":\"%s\"}", userId, isbn);
+        return String.format("{"userId":"%s","isbn":"%s"}", userId, isbn);
     }
 
     @Data
