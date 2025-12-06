@@ -18,7 +18,9 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 import static io.restassured.RestAssured.given;
 
+
 public class BookApiTest extends TestBase {
+
 
     private AuthResponse authResponse;
 
@@ -42,6 +44,7 @@ public class BookApiTest extends TestBase {
     void bookLifecycle_DeleteAddDelete_Test() {
         final String isbn = TestData.ISBN;
 
+
         removeAllUserBooks();
 
         BookOperationRequest addRequest = new BookOperationRequest(
@@ -51,13 +54,7 @@ public class BookApiTest extends TestBase {
         addBook(addRequest);
 
         assertBookPresent();
-
-        BookOperationRequest deleteRequest = new BookOperationRequest(
-                authResponse.getUserId(),
-                isbn
-        );
-        removeBook(deleteRequest);
-
+        removeBook(addRequest);
         assertBookAbsent();
     }
 
@@ -77,7 +74,7 @@ public class BookApiTest extends TestBase {
     private void addBook(BookOperationRequest request) {
         given(RestApiSpecs.baseSpec())
                 .header("Authorization", "Bearer " + authResponse.getToken())
-                .body(request)
+                .body(request)  // Сериализуется БЕЗ поля isbn!
                 .when()
                 .post("/BookStore/v1/Books")
                 .then()
@@ -97,7 +94,7 @@ public class BookApiTest extends TestBase {
     private void removeBook(BookOperationRequest request) {
         given(RestApiSpecs.baseSpec())
                 .header("Authorization", "Bearer " + authResponse.getToken())
-                .body(request)  // передаём модель напрямую!
+                .body(request.toDeleteJson())  // Формируем JSON вручную!
                 .when()
                 .delete("/BookStore/v1/Book")
                 .then()
