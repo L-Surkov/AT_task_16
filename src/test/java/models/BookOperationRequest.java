@@ -9,20 +9,11 @@ import lombok.Data;
 @AllArgsConstructor
 public class BookOperationRequest {
     private String userId;
-    private CollectionOfIsbn collectionOfIsbns;
+    private Isbn[] collectionOfIsbns;
 
     public BookOperationRequest(String userId, String isbn) {
         this.userId = userId;
-        this.collectionOfIsbns = new CollectionOfIsbn(new Isbn[]{new Isbn(isbn)});
-    }
-
-    @Data
-    public static class CollectionOfIsbn {
-        private Isbn[] isbns;
-
-        public CollectionOfIsbn(Isbn[] isbns) {
-            this.isbns = isbns;
-        }
+        this.collectionOfIsbns = new Isbn[]{new Isbn(isbn)};
     }
 
     @Data

@@ -36,39 +36,41 @@ public class BookApiTest extends TestBase {
     }
 
     @Test
-    @Description("Проверка операций с книгой: добавление и удаление из спика")
+    @Description("Проверка операций с книгой: добавление и удаление из списка")
     @DisplayName("Успешное добавление и удаление книги из списка в профиле")
     @Tag("ApiTests")
     void bookLifecycle_DeleteAddDelete_Test() {
         final String isbn = TestData.ISBN;
-        final BookOperationRequest bookRequest = new BookOperationRequest(
+
+        removeAllUserBooks();
+
+        BookOperationRequest addRequest = new BookOperationRequest(
                 authResponse.getUserId(),
                 isbn
         );
+        addBook(addRequest);
 
-        removeBookIfExists(bookRequest);
-
-        addBook(bookRequest);
         assertBookPresent();
 
-        removeBook(bookRequest);
+        BookOperationRequest deleteRequest = new BookOperationRequest(
+                authResponse.getUserId(),
+                isbn
+        );
+        removeBook(deleteRequest);
+
         assertBookAbsent();
     }
 
-   @Step("Удаление книги (если она есть в списке)")
-    private void removeBookIfExists(BookOperationRequest request) {
-        try {
-            given(RestApiSpecs.baseSpec())
-                    .header("Authorization", "Bearer " + authResponse.getToken())
-                    .body(request)
-                    .when()
-                    .delete("/BookStore/v1/Book")
-                    .then()
-                    .statusCode(204)
-                    .log().ifValidationFails();
-        } catch (Exception e) {
-            System.out.println("Книга не найдена для удаления (возможно, уже удалена).");
-        }
+    @Step("Удаление всех книг пользователя")
+    private void removeAllUserBooks() {
+        given(RestApiSpecs.baseSpec())
+                .header("Authorization", "Bearer " + authResponse.getToken())
+                .queryParam("UserId", authResponse.getUserId())
+                .when()
+                .delete("/BookStore/v1/Books")
+                .then()
+                .statusCode(204)
+                .log().ifValidationFails();
     }
 
     @Step("Добавление книги в коллекцию")
@@ -91,11 +93,11 @@ public class BookApiTest extends TestBase {
         $(".ReactTable").shouldHave(text(TestData.BOOK_TITLE));
     }
 
-    @Step("Удаление книги из списка")
-    private void removeBook(BookOperationRequest request) {  // Добавлен метод!
+    @Step("Удаление конкретной книги")
+    private void removeBook(BookOperationRequest request) {
         given(RestApiSpecs.baseSpec())
                 .header("Authorization", "Bearer " + authResponse.getToken())
-                .body(request)
+                .body(request)  // передаём модель напрямую!
                 .when()
                 .delete("/BookStore/v1/Book")
                 .then()
