@@ -23,6 +23,9 @@ public class TestBase {
     static void setupEnvironment() {
         Configuration.baseUrl = "https://demoqa.com";
         RestAssured.baseURI = "https://demoqa.com";
+        Configuration.browserSize = "1920x1080";
+        Configuration.browser = "chrome";
+        Configuration.browserVersion ="128.0";
         Configuration.pageLoadStrategy = "eager";
         defaultParser = Parser.JSON;
         Configuration.remote = System.getProperty("remote");
