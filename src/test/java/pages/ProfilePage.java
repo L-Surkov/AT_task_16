@@ -33,12 +33,6 @@ public class ProfilePage {
         return this;
     }
 
-    @Step("Обновить страницу")
-    public ProfilePage refreshPage() {
-        refresh();
-        return this;
-    }
-
     @Step("Проверить, что в профиле пустой список книг")
     public ProfilePage assertThatCartIsEmpty() {
         noDataInProfile.shouldHave(Condition.text("No rows found"));
