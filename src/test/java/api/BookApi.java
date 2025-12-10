@@ -8,7 +8,7 @@ import static io.restassured.RestAssured.given;
 import static specs.Specifications.*;
 
 public class BookApi {
-    @Step("Delete all books from the cart")
+    @Step("Удалить все книги из списка в профиле")
     public void deleteAllBooks(String userId) {
         given(sendRequestWithoutBodySpec)
                 .queryParams("UserId", userId)
@@ -18,7 +18,7 @@ public class BookApi {
                 .spec(delete204ResponseSuccessSpec);
     }
 
-    @Step("List all books in the catalog")
+    @Step("Вывести список книг")
     public AllBooksModel listOfBooks() {
         return given(sendRequestWithoutBodySpec)
                 .when()
@@ -28,7 +28,7 @@ public class BookApi {
                 .extract().as(AllBooksModel.class);
     }
 
-    @Step("Add books to the cart")
+    @Step("Добавить книги в список профиля")
     public void addBooks() {
         AddBooksRequestModel addBooksRequest = new AddBooksRequestModel();
         addBooksRequest.setUserId(authorizeRequest().getUserId());
