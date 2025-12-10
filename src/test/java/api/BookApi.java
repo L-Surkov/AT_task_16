@@ -18,7 +18,7 @@ public class BookApi {
                 .spec(delete204ResponseSuccessSpec);
     }
 
-    @Step("Вывести список книг")
+    @Step("Вывести список всех книг в профиле")
     public AllBooksModel listOfBooks() {
         return given(sendRequestWithoutBodySpec)
                 .when()
